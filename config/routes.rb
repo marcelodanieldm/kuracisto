@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   get '/empleados/dashboard', to: 'empleados#dashboard'
   get '/medicos/dashboard', to: 'medicos#dashboard'
   get '/pacientes/agenda', to: 'pacientes#agenda'
-  get '/admin/dashboard', to: 'admin#dashboard'  rails db:migrate
+  get '/admin/dashboard', to: 'admin#dashboard'
 
   get "up" => "rails/health#show", as: :rails_health_check
 
