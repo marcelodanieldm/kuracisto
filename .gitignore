@@ -32,3 +32,14 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+
+.DS_Store
+.env
+log/
+tmp/
+db/*.sqlite3
+db/*.sqlite3-journal
+/public/system
+/vendor/bundle
+/node_modules
