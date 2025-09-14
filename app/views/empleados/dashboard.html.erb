@@ -1,2 +1,57 @@
-<h1>Empleados#dashboard</h1>
-<p>Find me in app/views/empleados/dashboard.html.erb</p>
+<h1>Dashboard Empleado</h1>
+
+<h3>Administrar pacientes</h3>
+<%= link_to "Agregar paciente", nuevo_paciente_path, class: "btn btn-primary" %>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>DNI</th>
+      <th>Teléfono</th>
+      <th>Tipo</th>
+      <th>Última visita</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @pacientes.each do |p| %>
+      <tr>
+        <td><%= p.full_name %></td>
+        <td><%= p.dni %></td>
+        <td><%= p.telefono %></td>
+        <td><%= p.tipo_seguro %></td>
+        <td><%= p.turnos.last&.fecha || "Nunca" %></td>
+        <td>
+          <%= link_to "Editar", edit_paciente_path(p), class: "btn btn-sm btn-warning" %>
+          <%= link_to "Borrar", paciente_path(p), method: :delete, class: "btn btn-sm btn-danger",  { confirm: "¿Estás seguro?" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h3>Envío de email</h3>
+<% @pacientes.first(3).each do |p| %>
+  <%= form_with url: enviar_email_paciente_empleados_path(paciente_id: p.id), method: :post do |f| %>
+    <%= f.label :mensaje, "Mensaje:" %>
+    <%= f.text_area :mensaje, rows: 3 %>
+    <%= f.submit "Enviar email a #{p.nombre}", class: "btn btn-info btn-sm" %>
+  <% end %>
+  <hr>
+<% end %>
+
+<h3>Asistencia</h3>
+<h5>✅ Asistieron</h5>
+<ul>
+  <% @asistieron.each do |t| %>
+    <li><%= t.paciente.full_name %> - <%= t.fecha %> a <%= t.hora %></li>
+  <% end %>
+</ul>
+
+<h5>❌ Faltaron</h5>
+<ul>
+  <% @faltaron.each do |t| %>
+    <li><%= t.paciente.full_name %> - <%= t.fecha %> a <%= t.hora %></li>
+  <% end %>
+</ul>
