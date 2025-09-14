@@ -1,5 +1,5 @@
 class BloqueoDia < ApplicationRecord
-  belongs_to :medico, class_name: 'User'
+  belongs_to :medico, class_name: "User", foreign_key: "medico_id"
 
   validates :fecha, presence: true, uniqueness: { scope: :medico_id }
   validate :no_fecha_pasada

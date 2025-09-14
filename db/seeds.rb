@@ -7,50 +7,46 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
 # Crear administrador
-admin = User.create!(
-  email: 'admin@clinica.com',
-  password: '12345678',
-  role: 'admin'
-)
+admin = User.find_or_create_by!(email: 'admin@clinica.com') do |u|
+  u.password = '12345678'
+  u.role = 'admin'
+end
 
 # Crear médico
-medico = User.create!(
-  email: 'dr.perez@clinica.com',
-  password: '12345678',
-  role: 'medico'
-)
+medico = User.find_or_create_by!(email: 'dr.perez@clinica.com') do |u|
+  u.password = '12345678'
+  u.role = 'medico'
+end
 
-Paciente.create!(
-  user: medico,
-  nombre: 'Dr. Juan',
-  apellido: 'Pérez',
-  dni: '11223344',
-  telefono: '1199887766',
-  tipo_seguro: 'particular'
-)
+Paciente.find_or_create_by!(dni: '11223344') do |p|
+  p.user = medico
+  p.nombre = 'Dr. Juan'
+  p.apellido = 'Pérez'
+  p.telefono = '1199887766'
+  p.tipo_seguro = 'particular'
+end
 
 # Crear empleado
-empleado = User.create!(
-  email: 'empleado@clinica.com',
-  password: '12345678',
-  role: 'empleado'
-)
+empleado = User.find_or_create_by!(email: 'empleado@clinica.com') do |u|
+  u.password = '12345678'
+  u.role = 'empleado'
+end
 
 # Crear pacientes
 10.times do |i|
-  Paciente.create!(
-    user: User.create!(
-      email: "paciente#{i+1}@email.com",
-      password: '12345678',
-      role: 'paciente'
-    ),
-    nombre: Faker::Name.first_name,
-    apellido: Faker::Name.last_name,
-    dni: Faker::Number.number(digits: 8),
-    telefono: Faker::PhoneNumber.phone_number,
-    tipo_seguro: %w[particular prepaga].sample
-  )
+  user = User.find_or_create_by!(email: "paciente#{i+1}@email.com") do |u|
+    u.password = '12345678'
+    u.role = 'paciente'
+  end
+  Paciente.find_or_create_by!(dni: Faker::Number.number(digits: 8)) do |p|
+    p.user = user
+    p.nombre = Faker::Name.first_name
+    p.apellido = Faker::Name.last_name
+    p.telefono = Faker::PhoneNumber.phone_number
+    p.tipo_seguro = %w[particular prepaga].sample
+  end
 end
 
 # Crear turnos
@@ -58,11 +54,13 @@ medico = User.find_by(email: 'dr.perez@clinica.com')
 pacientes = Paciente.all
 
 (1..15).each do |i|
+  hora_minuto = [ 0, 30 ].sample
+  hora = Time.new(2000, 1, 1, rand(8..18), hora_minuto)
   Turno.create!(
     medico: medico,
     paciente: pacientes.sample,
     fecha: Date.today + i.days,
-    hora: "#{rand(8..18)}:#{rand([0,30])}",
+    hora: hora,
     estado: 'disponible'
   )
 end

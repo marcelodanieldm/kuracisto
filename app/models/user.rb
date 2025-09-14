@@ -1,6 +1,5 @@
 class User < ApplicationRecord
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
 
   enum role: { paciente: 0, medico: 1, empleado: 2, admin: 3 }
   after_initialize :set_default_role, if: :new_record?
@@ -10,7 +9,7 @@ class User < ApplicationRecord
   has_many :historias_clinicas, dependent: :destroy
 
   # Bloqueos de días para médicos
-  has_many :bloqueos_dias, -> { where(role: 'medico') }, class_name: 'BloqueoDia', foreign_key: 'medico_id'
+  has_many :bloqueos_dias, class_name: "BloqueoDia", foreign_key: "medico_id"
 
   def turnos_bloqueados
     bloqueos_dias.pluck(:fecha).map(&:to_date)
