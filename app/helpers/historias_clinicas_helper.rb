@@ -1,0 +1,2 @@
+module HistoriasClinicasHelper
+end
