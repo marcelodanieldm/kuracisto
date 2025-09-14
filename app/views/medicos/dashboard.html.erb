@@ -1,2 +1,54 @@
-<h1>Medicos#dashboard</h1>
-<p>Find me in app/views/medicos/dashboard.html.erb</p>
+<h1>Dashboard Médico</h1>
+
+<h3>Bloquear día</h3>
+<%= form_with url: bloquear_dia_medicos_path, method: :post do |f| %>
+  <%= f.label :fecha, "Fecha" %>
+  <%= f.date_field :fecha %>
+  <%= f.label :motivo, "Motivo" %>
+  <%= f.text_area :motivo %>
+  <%= f.submit "Bloquear día", class: "btn btn-danger" %>
+<% end %>
+
+<h3>Días bloqueados</h3>
+<ul>
+  <% @bloqueos.each do |bloqueo| %>
+    <li>
+      <%= bloqueo.fecha %> - <%= bloqueo.motivo %>
+      <%= link_to "Eliminar", eliminar_bloqueo_medicos_path(bloqueo), method: :delete, class: "btn btn-sm btn-outline-danger" %>
+    </li>
+  <% end %>
+</ul>
+
+<h3>Turnos de hoy</h3>
+<ul>
+  <% @turnos_hoy.each do |t| %>
+    <li><%= t.paciente.full_name %> - <%= t.hora %> (<%= t.estado %>)</li>
+  <% end %>
+</ul>
+
+<h3>Historias Clínicas</h3>
+<%= link_to "Crear nueva historia", new_historia_clinica_path, class: "btn btn-success" %>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Paciente</th>
+      <th>Fecha</th>
+      <th>Diagnóstico</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @historias.each do |h| %>
+      <tr>
+        <td><%= h.paciente.full_name %></td>
+        <td><%= h.fecha %></td>
+        <td><%= h.diagnostico.truncate(50) %></td>
+        <td>
+          <%= link_to "Editar", edit_historia_clinica_path(h), class: "btn btn-sm btn-warning" %>
+          <%= link_to "Borrar", historia_clinica_path(h), method: :delete, class: "btn btn-sm btn-danger",  { confirm: "¿Seguro?" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
