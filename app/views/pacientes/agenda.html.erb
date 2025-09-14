@@ -1,0 +1,27 @@
+<h1>Agenda de Turnos Disponibles</h1>
+
+<div class="row">
+  <% @turnos_disponibles.each do |turno| %>
+    <div class="col-md-4 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><%= turno.medico.email %></h5>
+          <p class="card-text">
+            <strong><%= turno.fecha.strftime("%d/%m/%Y") %></strong><br>
+            <%= turno.hora.strftime("%H:%M") %> hs
+          </p>
+          <%= link_to "Reservar", reservar_turno_path(turno.id), method: :post, class: "btn btn-primary btn-sm" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<hr>
+
+<h3>Mi historial médico</h3>
+<% if current_user.paciente&.historia_clinica %>
+  <%= link_to "Ver historial", historial_medico_path, class: "btn btn-secondary" %>
+<% else %>
+  <p>No tienes historial médico aún.</p>
+<% end %>
