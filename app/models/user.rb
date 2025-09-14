@@ -9,6 +9,13 @@ class User < ApplicationRecord
   has_many :turnos, dependent: :destroy
   has_many :historias_clinicas, dependent: :destroy
 
+  # Bloqueos de días para médicos
+  has_many :bloqueos_dias, -> { where(role: 'medico') }, class_name: 'BloqueoDia', foreign_key: 'medico_id'
+
+  def turnos_bloqueados
+    bloqueos_dias.pluck(:fecha).map(&:to_date)
+  end
+
   private
 
   def set_default_role
