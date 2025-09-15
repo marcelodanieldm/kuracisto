@@ -5,8 +5,8 @@ class User < ApplicationRecord
   after_initialize :set_default_role, if: :new_record?
 
   has_many :pacientes, dependent: :destroy
-  has_many :turnos, dependent: :destroy
-  has_many :historias_clinicas, dependent: :destroy
+  has_many :turnos, foreign_key: "medico_id", dependent: :destroy
+  has_many :historias_clinicas, class_name: "HistoriaClinica", foreign_key: "medico_id", dependent: :destroy
 
   # Bloqueos de días para médicos
   has_many :bloqueos_dias, class_name: "BloqueoDia", foreign_key: "medico_id"

@@ -90,6 +90,7 @@ class MedicosController < ApplicationController
     @turnos = current_user.turnos.where(fecha: Date.today.beginning_of_month..Date.today.end_of_month, estado: 'reservado')
     @historias = current_user.historias_clinicas.includes(:paciente).order(created_at: :desc)
     @bloqueos = current_user.bloqueos_dias.order(fecha: :asc)
+    @pacientes = Paciente.all.order(:nombre)
 
     if params[:busqueda].present?
       query = params[:busqueda].strip

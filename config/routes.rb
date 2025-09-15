@@ -1,4 +1,5 @@
-Rails.application.routes.draw do
+  Rails.application.routes.draw do
+    post '/medicos/bloquear_dia', to: 'medicos#bloquear_dia', as: :bloquear_dia_medicos
   post '/empleados/enviar_email_paciente', to: 'empleados#enviar_email_paciente', as: :enviar_email_paciente_empleados
     post '/empleados/crear_paciente', to: 'empleados#crear_paciente', as: :crear_paciente_empleados
     get '/empleados/editar_paciente/:id', to: 'empleados#editar_paciente', as: :editar_paciente_empleados
