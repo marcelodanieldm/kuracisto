@@ -11,6 +11,12 @@ class User < ApplicationRecord
   # Bloqueos de días para médicos
   has_many :bloqueos_dias, class_name: "BloqueoDia", foreign_key: "medico_id"
 
+  # Empleado fields
+  validates :nombre, presence: true, if: -> { empleado? }
+  validates :apellido, presence: true, if: -> { empleado? }
+  validates :fecha_ingreso, presence: true, if: -> { empleado? }
+  validates :dni, presence: true, if: -> { empleado? }
+
   def turnos_bloqueados
     bloqueos_dias.pluck(:fecha).map(&:to_date)
   end

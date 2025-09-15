@@ -1,0 +1,76 @@
+import React, { useEffect, useState } from "react";
+import LogoutButton from "./LogoutButton";
+
+export default function DashboardEmpleado() {
+  // Obtener usuario actual desde window.__currentUser
+  const [user, setUser] = useState({ email: "", role: "" });
+  useEffect(() => {
+    if (window.__currentUser) {
+      setUser(window.__currentUser);
+    }
+  }, []);
+
+  return (
+    <div style={{ maxWidth: "1200px", margin: "2rem auto", padding: "2rem", background: "#f3f4f6", borderRadius: "2rem", boxShadow: "0 4px 24px #0001" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
+        <h1 style={{ fontSize: "2.5rem", fontWeight: "bold", color: "#047857" }}>Dashboard Empleado</h1>
+        <div style={{ textAlign: "right" }}>
+          <div style={{ marginBottom: "0.5rem", fontSize: "1rem", color: "#374151" }}>
+            <span style={{ fontWeight: "bold" }}>{user.email}</span> <span style={{ color: "#047857", fontWeight: "bold", marginLeft: "0.5rem" }}>({user.role})</span>
+          </div>
+          <a href="/perfil" style={menuBtnStyle}>Perfil</a>
+          <LogoutButton />
+        </div>
+      </div>
+      {/* Aquí irían los componentes de pacientes, turnos, email, etc. */}
+      <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap" }}>
+        <section style={sectionStyle}>
+          <h2 style={sectionTitle}>Administrar pacientes</h2>
+          {/* Tabla de pacientes y acciones */}
+        </section>
+        <section style={sectionStyle}>
+          <h2 style={sectionTitle}>Reservar turno</h2>
+          {/* Formulario para reservar turno */}
+        </section>
+        <section style={sectionStyle}>
+          <h2 style={sectionTitle}>Envío de email</h2>
+          {/* Formulario de email */}
+        </section>
+        <section style={sectionStyle}>
+          <h2 style={sectionTitle}>Próximos turnos</h2>
+          {/* Lista de turnos */}
+        </section>
+      </div>
+    </div>
+  );
+}
+
+
+const sectionStyle = {
+  background: "#fff",
+  borderRadius: "1rem",
+  boxShadow: "0 2px 8px #0001",
+  padding: "1.5rem",
+  flex: "1 1 300px",
+  minWidth: "300px",
+  marginBottom: "2rem"
+};
+
+const sectionTitle = {
+  fontSize: "1.25rem",
+  fontWeight: "bold",
+  color: "#047857",
+  marginBottom: "1rem"
+};
+
+const menuBtnStyle = {
+  background: "#047857",
+  color: "#fff",
+  padding: "0.5rem 1rem",
+  borderRadius: "0.75rem",
+  fontWeight: "bold",
+  fontSize: "1rem",
+  border: "none",
+  textDecoration: "none",
+  marginRight: "1rem"
+};

@@ -2,6 +2,4 @@
 // app/assets/javascripts/application.js
 
 // Importa los módulos necesarios si usas Turbo, Stimulus, etc.
-import "@hotwired/turbo-rails"
-import "./controllers"
 
