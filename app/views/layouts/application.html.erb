@@ -1,66 +1,115 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Clinica Reservas</title>
+<html lang="es">
+    <head>
+    <title>Kuracisto</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
-  <%= csrf_meta_tags %>
-  <%= csp_meta_tag %>
-      <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>     <!-- ✅ VA ANTES de javascript_include_tag -->
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
-    
   </head>
 
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-      <div class="container">
-        <%= link_to "Clinica Reservas", root_path, class: "navbar-brand" %>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto">
-            <% if user_signed_in? %>
-              <li class="nav-item">
-                <%= link_to "Mi Agenda", pacientes_agenda_path, class: "nav-link" %>
-              </li>
-              <% if current_user.medico? %>
-                <li class="nav-item">
-                  <%= link_to "Dashboard Médico", medicos_dashboard_path, class: "nav-link" %>
-                </li>
-              <% end %>
-              <% if current_user.empleado? %>
-                <li class="nav-item">
-                  <%= link_to "Dashboard Empleado", empleados_dashboard_path, class: "nav-link" %>
-                </li>
-              <% end %>
-              <li class="nav-item">
-                <%= link_to "Cerrar sesión", destroy_user_session_path, method: :delete, class: "nav-link text-light" %>
-              </li>
-            <% else %>
-              <li class="nav-item">
-                <%= link_to "Iniciar sesión", new_user_session_path, class: "nav-link" %>
-              </li>
-              <li class="nav-item">
-                <%= link_to "Registrarse", new_user_registration_path, class: "nav-link" %>
-              </li>
+  <body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Barra de navegación - Estilo moderno con Tailwind -->
+    <nav class="bg-blue-800 shadow-lg">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <!-- Logo / Título -->
+          <div class="flex items-center">
+            <%= link_to root_path, class: "text-white text-xl font-bold hover:text-blue-200 transition" do %>
+              Kuracisto
             <% end %>
-          </ul>
+          </div>
+
+          <!-- Menú en pantallas grandes -->
+          <div class="hidden md:flex items-center space-x-4">
+            <% if user_signed_in? %>
+              <%= link_to "Mi Agenda", pacientes_agenda_path, class: "text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium transition" %>
+
+              <% if current_user.medico? %>
+                <%= link_to "Dashboard Médico", medicos_dashboard_path, class: "text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium transition" %>
+              <% end %>
+
+              <% if current_user.empleado? %>
+                <%= link_to "Dashboard Empleado", empleados_dashboard_path, class: "text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium transition" %>
+              <% end %>
+
+              <%= link_to "Cerrar sesión", destroy_user_session_path,
+                  method: :delete,
+                  class: "bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition",
+                  data: { turbo_method: :delete } %>
+
+            <% else %>
+              <%= link_to "Iniciar sesión", new_user_session_path, class: "text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium transition" %>
+              <%= link_to "Registrarse", new_user_registration_path, class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition" %>
+            <% end %>
+          </div>
+
+          <!-- Botón hamburguesa (móvil) -->
+          <div class="md:hidden flex items-center">
+            <button id="mobile-menu-button" class="text-white focus:outline-none">
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Menú móvil oculto -->
+      <div id="mobile-menu" class="md:hidden bg-blue-900 hidden shadow-lg">
+        <div class="px-2 pt-2 pb-3 space-y-1">
+          <% if user_signed_in? %>
+            <%= link_to "Mi Agenda", pacientes_agenda_path, class: "text-white hover:bg-blue-700 block px-3 py-2 rounded-md text-base font-medium" %>
+
+            <% if current_user.medico? %>
+              <%= link_to "Dashboard Médico", medicos_dashboard_path, class: "text-white hover:bg-blue-700 block px-3 py-2 rounded-md text-base font-medium" %>
+            <% end %>
+
+            <% if current_user.empleado? %>
+              <%= link_to "Dashboard Empleado", empleados_dashboard_path, class: "text-white hover:bg-blue-700 block px-3 py-2 rounded-md text-base font-medium" %>
+            <% end %>
+
+            <%= link_to "Cerrar sesión", destroy_user_session_path,
+                method: :delete,
+                class: "text-white hover:bg-red-700 block px-3 py-2 rounded-md text-base font-medium",
+                data: { turbo_method: :delete } %>
+
+          <% else %>
+            <%= link_to "Iniciar sesión", new_user_session_path, class: "text-white hover:bg-blue-700 block px-3 py-2 rounded-md text-base font-medium" %>
+            <%= link_to "Registrarse", new_user_registration_path, class: "bg-blue-600 hover:bg-blue-700 text-white block px-3 py-2 rounded-md text-base font-medium" %>
+          <% end %>
         </div>
       </div>
     </nav>
 
-    <main class="container mt-4">
+    <!-- Contenido principal -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <% if notice %>
-        <div class="alert alert-success"><%= notice %></div>
+        <div class="bg-green-100 text-green-800 p-4 rounded mb-6"><%= notice %></div>
       <% end %>
       <% if alert %>
-        <div class="alert alert-danger"><%= alert %></div>
+        <div class="bg-red-100 text-red-800 p-4 rounded mb-6"><%= alert %></div>
       <% end %>
 
       <%= yield %>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Pie de página -->
+    <footer class="bg-white border-t border-gray-200 py-6 mt-auto">
+      <div class="container mx-auto px-4 text-center text-gray-500 text-sm">
+        © 2025 Kuracisto — Sistema de gestión médica
+      </div>
+    </footer>
+
+    <!-- Script para menú móvil (sin Bootstrap JS) -->
+    <script>
+      document.getElementById('mobile-menu-button').addEventListener('click', () => {
+        const menu = document.getElementById('mobile-menu');
+        menu.classList.toggle('hidden');
+      });
+    </script>
   </body>
 </html>
