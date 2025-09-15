@@ -1,4 +1,4 @@
-source "https://rubygems.org"
+source "https://rubygems.org"   # <-- Esta línea debe ir AL INICIO del Gemfile, no aquí!
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.1.3", ">= 7.1.3.2"
@@ -10,6 +10,9 @@ gem "pg", "~> 1.1"
 gem "puma", ">= 5.0"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
+
+gem "turbo-rails"
+gem "importmap-rails"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
@@ -58,3 +61,10 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+
+gem "cssbundling-rails"
+gem 'jquery-rails'              # Para Bootstrap JS (opcional)
+gem 'mailgun-ruby'              # Envío de emails (alternativa: mailer de Rails)
+gem 'dotenv-rails'              # Variables de entorno
+gem 'faker'                     # Datos de prueba

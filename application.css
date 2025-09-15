@@ -1,0 +1,9 @@
+/* app/assets/stylesheets/application.css */
+/* Este archivo debe existir para que Propshaft lo encuentre */
+/* Puedes dejarlo vacío, pero te recomiendo añadir esto para evitar problemas futuros */
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
