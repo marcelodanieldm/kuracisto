@@ -68,3 +68,7 @@ gem 'jquery-rails'              # Para Bootstrap JS (opcional)
 gem 'mailgun-ruby'              # Envío de emails (alternativa: mailer de Rails)
 gem 'dotenv-rails'              # Variables de entorno
 gem 'faker'                     # Datos de prueba
+
+gem "jsbundling-rails", "~> 1.3"
+
+gem "tailwindcss-rails", "~> 4.3"

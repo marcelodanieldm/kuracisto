@@ -1,57 +1,75 @@
-<h1>Dashboard Empleado</h1>
 
-<h3>Administrar pacientes</h3>
-<%= link_to "Agregar paciente", nuevo_paciente_path, class: "btn btn-primary" %>
+<div class="max-w-4xl mx-auto p-4">
+  <h1 class="text-3xl font-bold mb-6 text-blue-800">Dashboard Empleado</h1>
 
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th>Nombre</th>
-      <th>DNI</th>
-      <th>Teléfono</th>
-      <th>Tipo</th>
-      <th>Última visita</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @pacientes.each do |p| %>
-      <tr>
-        <td><%= p.full_name %></td>
-        <td><%= p.dni %></td>
-        <td><%= p.telefono %></td>
-        <td><%= p.tipo_seguro %></td>
-        <td><%= p.turnos.last&.fecha || "Nunca" %></td>
-        <td>
-          <%= link_to "Editar", edit_paciente_path(p), class: "btn btn-sm btn-warning" %>
-          <%= link_to "Borrar", paciente_path(p), method: :delete, class: "btn btn-sm btn-danger",  { confirm: "¿Estás seguro?" } %>
-        </td>
-      </tr>
+
+  <div class="mb-8 bg-white rounded shadow p-4">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-semibold text-blue-700">Administrar pacientes</h2>
+      <%= link_to "Agregar paciente", nuevo_paciente_path, class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-semibold transition" %>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nombre</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">DNI</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Teléfono</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Tipo</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Última visita</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @pacientes.each do |p| %>
+            <tr>
+              <td class="px-4 py-2"><%= p.full_name %></td>
+              <td class="px-4 py-2"><%= p.dni %></td>
+              <td class="px-4 py-2"><%= p.telefono %></td>
+              <td class="px-4 py-2"><%= p.tipo_seguro %></td>
+              <td class="px-4 py-2"><%= p.turnos.last&.fecha || "Nunca" %></td>
+              <td class="px-4 py-2 space-x-2">
+                <%= link_to "Editar", edit_paciente_path(p), class: "bg-yellow-400 hover:bg-yellow-500 text-white px-2 py-1 rounded text-xs font-semibold transition" %>
+                <%= link_to "Borrar", paciente_path(p), method: :delete, class: "bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-xs font-semibold transition", data: { confirm: "¿Estás seguro?" } %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <%= render 'shared/calendar' %>
+
+  <div class="mb-8 bg-white rounded shadow p-4">
+    <h2 class="text-xl font-semibold mb-4 text-blue-700">Envío de email</h2>
+    <% @pacientes.first(3).each do |p| %>
+      <%= form_with url: enviar_email_paciente_empleados_path(paciente_id: p.id), method: :post, class: "mb-4" do |f| %>
+        <%= f.label :mensaje, "Mensaje:", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.text_area :mensaje, rows: 3, class: "mt-1 block w-full border-gray-300 rounded-md" %>
+        <%= f.submit "Enviar email a #{p.nombre}", class: "bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs font-semibold transition mt-2" %>
+      <% end %>
+      <hr class="my-2">
     <% end %>
-  </tbody>
-</table>
+  </div>
 
-<h3>Envío de email</h3>
-<% @pacientes.first(3).each do |p| %>
-  <%= form_with url: enviar_email_paciente_empleados_path(paciente_id: p.id), method: :post do |f| %>
-    <%= f.label :mensaje, "Mensaje:" %>
-    <%= f.text_area :mensaje, rows: 3 %>
-    <%= f.submit "Enviar email a #{p.nombre}", class: "btn btn-info btn-sm" %>
-  <% end %>
-  <hr>
-<% end %>
-
-<h3>Asistencia</h3>
-<h5>✅ Asistieron</h5>
-<ul>
-  <% @asistieron.each do |t| %>
-    <li><%= t.paciente.full_name %> - <%= t.fecha %> a <%= t.hora %></li>
-  <% end %>
-</ul>
-
-<h5>❌ Faltaron</h5>
-<ul>
-  <% @faltaron.each do |t| %>
-    <li><%= t.paciente.full_name %> - <%= t.fecha %> a <%= t.hora %></li>
-  <% end %>
-</ul>
+  <div class="mb-8 bg-white rounded shadow p-4">
+    <h2 class="text-xl font-semibold mb-4 text-blue-700">Asistencia</h2>
+    <div class="mb-2">
+      <h5 class="font-semibold text-green-700">✅ Asistieron</h5>
+      <ul class="list-disc pl-5 text-gray-700">
+        <% @asistieron.each do |t| %>
+          <li><%= t.paciente.full_name %> - <%= t.fecha %> a <%= t.hora %></li>
+        <% end %>
+      </ul>
+    </div>
+    <div>
+      <h5 class="font-semibold text-red-700">❌ Faltaron</h5>
+      <ul class="list-disc pl-5 text-gray-700">
+        <% @faltaron.each do |t| %>
+          <li><%= t.paciente.full_name %> - <%= t.fecha %> a <%= t.hora %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>

@@ -1,54 +1,77 @@
-<h1>Dashboard Médico</h1>
 
-<h3>Bloquear día</h3>
-<%= form_with url: bloquear_dia_medicos_path, method: :post do |f| %>
-  <%= f.label :fecha, "Fecha" %>
-  <%= f.date_field :fecha %>
-  <%= f.label :motivo, "Motivo" %>
-  <%= f.text_area :motivo %>
-  <%= f.submit "Bloquear día", class: "btn btn-danger" %>
-<% end %>
+<div class="max-w-4xl mx-auto p-4">
+  <h1 class="text-3xl font-bold mb-6 text-blue-800">Dashboard Médico</h1>
 
-<h3>Días bloqueados</h3>
-<ul>
-  <% @bloqueos.each do |bloqueo| %>
-    <li>
-      <%= bloqueo.fecha %> - <%= bloqueo.motivo %>
-      <%= link_to "Eliminar", eliminar_bloqueo_medicos_path(bloqueo), method: :delete, class: "btn btn-sm btn-outline-danger" %>
-    </li>
-  <% end %>
-</ul>
-
-<h3>Turnos de hoy</h3>
-<ul>
-  <% @turnos_hoy.each do |t| %>
-    <li><%= t.paciente.full_name %> - <%= t.hora %> (<%= t.estado %>)</li>
-  <% end %>
-</ul>
-
-<h3>Historias Clínicas</h3>
-<%= link_to "Crear nueva historia", new_historia_clinica_path, class: "btn btn-success" %>
-
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Paciente</th>
-      <th>Fecha</th>
-      <th>Diagnóstico</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @historias.each do |h| %>
-      <tr>
-        <td><%= h.paciente.full_name %></td>
-        <td><%= h.fecha %></td>
-        <td><%= h.diagnostico.truncate(50) %></td>
-        <td>
-          <%= link_to "Editar", edit_historia_clinica_path(h), class: "btn btn-sm btn-warning" %>
-          <%= link_to "Borrar", historia_clinica_path(h), method: :delete, class: "btn btn-sm btn-danger",  { confirm: "¿Seguro?" } %>
-        </td>
-      </tr>
+  <div class="mb-8 bg-white rounded shadow p-4">
+    <h2 class="text-xl font-semibold mb-4 text-blue-700">Bloquear día</h2>
+    <%= form_with url: bloquear_dia_medicos_path, method: :post, class: "grid gap-4 md:grid-cols-2" do |f| %>
+      <div>
+        <%= f.label :fecha, "Fecha", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.date_field :fecha, class: "mt-1 block w-full border-gray-300 rounded-md" %>
+      </div>
+      <div>
+        <%= f.label :motivo, "Motivo", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.text_area :motivo, class: "mt-1 block w-full border-gray-300 rounded-md" %>
+      </div>
+      <div class="md:col-span-2">
+        <%= f.submit "Bloquear día", class: "bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md font-semibold transition" %>
+      </div>
     <% end %>
-  </tbody>
-</table>
+  </div>
+
+  <div class="mb-8 bg-white rounded shadow p-4">
+    <h2 class="text-xl font-semibold mb-4 text-blue-700">Días bloqueados</h2>
+    <ul class="divide-y divide-gray-200">
+      <% @bloqueos.each do |bloqueo| %>
+        <li class="py-2 flex justify-between items-center">
+          <span class="text-gray-700"><%= bloqueo.fecha %> - <%= bloqueo.motivo %></span>
+          <%= link_to "Eliminar", eliminar_bloqueo_medicos_path(bloqueo), method: :delete, class: "bg-red-100 hover:bg-red-200 text-red-700 px-2 py-1 rounded text-xs font-semibold transition" %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+
+  <div class="mb-8 bg-white rounded shadow p-4">
+    <h2 class="text-xl font-semibold mb-4 text-blue-700">Turnos de hoy</h2>
+    <ul class="divide-y divide-gray-200">
+      <% @turnos_hoy.each do |t| %>
+        <li class="py-2"><span class="font-semibold text-gray-800"><%= t.paciente.full_name %></span> - <%= t.hora %> (<span class="text-blue-600"><%= t.estado %></span>)</li>
+      <% end %>
+    </ul>
+  </div>
+
+  <%= render 'shared/calendar' %>
+
+  <div class="mb-8 bg-white rounded shadow p-4">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-semibold text-blue-700">Historias Clínicas</h2>
+      <%= link_to "Crear nueva historia", new_historia_clinica_path, class: "bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-semibold transition" %>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Paciente</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Diagnóstico</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @historias.each do |h| %>
+            <tr>
+              <td class="px-4 py-2"><%= h.paciente.full_name %></td>
+              <td class="px-4 py-2"><%= h.fecha %></td>
+              <td class="px-4 py-2"><%= h.diagnostico.truncate(50) %></td>
+              <td class="px-4 py-2 space-x-2">
+                <%= link_to "Editar", edit_historia_clinica_path(h), class: "bg-yellow-400 hover:bg-yellow-500 text-white px-2 py-1 rounded text-xs font-semibold transition" %>
+                <%= link_to "Borrar", historia_clinica_path(h), method: :delete, class: "bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-xs font-semibold transition", data: { confirm: "¿Seguro?" } %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

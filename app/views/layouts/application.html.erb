@@ -2,13 +2,14 @@
 <html lang="es">
     <head>
     <title>Kuracisto</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="turbo-visit-control" content="reload">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
-    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <!-- javascript_importmap_tags eliminado para evitar error -->
+  <%= javascript_include_tag "application" %>
   </head>
 
   <body class="bg-gray-50 min-h-screen flex flex-col">
@@ -36,10 +37,10 @@
                 <%= link_to "Dashboard Empleado", empleados_dashboard_path, class: "text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium transition" %>
               <% end %>
 
-              <%= link_to "Cerrar sesión", destroy_user_session_path,
-                  method: :delete,
-                  class: "bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition",
-                  data: { turbo_method: :delete } %>
+        <%= button_to "Cerrar sesión", destroy_user_session_path,
+          method: :delete,
+          class: "bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition border-none",
+          form_class: "inline" %>
 
             <% else %>
               <%= link_to "Iniciar sesión", new_user_session_path, class: "text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium transition" %>
@@ -72,10 +73,10 @@
               <%= link_to "Dashboard Empleado", empleados_dashboard_path, class: "text-white hover:bg-blue-700 block px-3 py-2 rounded-md text-base font-medium" %>
             <% end %>
 
-            <%= link_to "Cerrar sesión", destroy_user_session_path,
-                method: :delete,
-                class: "text-white hover:bg-red-700 block px-3 py-2 rounded-md text-base font-medium",
-                data: { turbo_method: :delete } %>
+      <%= button_to "Cerrar sesión", destroy_user_session_path,
+        method: :delete,
+        class: "text-white hover:bg-red-700 block px-3 py-2 rounded-md text-base font-medium border-none",
+        form_class: "block" %>
 
           <% else %>
             <%= link_to "Iniciar sesión", new_user_session_path, class: "text-white hover:bg-blue-700 block px-3 py-2 rounded-md text-base font-medium" %>
