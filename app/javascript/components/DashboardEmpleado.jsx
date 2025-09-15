@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Header from "./Header";
 import LogoutButton from "./LogoutButton";
 
 export default function DashboardEmpleado() {
@@ -12,16 +13,7 @@ export default function DashboardEmpleado() {
 
   return (
     <div style={{ maxWidth: "1200px", margin: "2rem auto", padding: "2rem", background: "#f3f4f6", borderRadius: "2rem", boxShadow: "0 4px 24px #0001" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
-        <h1 style={{ fontSize: "2.5rem", fontWeight: "bold", color: "#047857" }}>Dashboard Empleado</h1>
-        <div style={{ textAlign: "right" }}>
-          <div style={{ marginBottom: "0.5rem", fontSize: "1rem", color: "#374151" }}>
-            <span style={{ fontWeight: "bold" }}>{user.email}</span> <span style={{ color: "#047857", fontWeight: "bold", marginLeft: "0.5rem" }}>({user.role})</span>
-          </div>
-          <a href="/perfil" style={menuBtnStyle}>Perfil</a>
-          <LogoutButton />
-        </div>
-      </div>
+      <Header email={user.email} role={user.role} onLogout={() => window.location.href = "/users/sign_out"} />
       {/* Aquí irían los componentes de pacientes, turnos, email, etc. */}
       <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap" }}>
         <section style={sectionStyle}>

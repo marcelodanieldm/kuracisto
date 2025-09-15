@@ -1,6 +1,7 @@
 console.log('DashboardAdmin loaded');
 
 import React, { useState, useEffect } from "react";
+import Header from "./Header";
 
 
 export default function DashboardAdmin() {
@@ -214,13 +215,17 @@ export default function DashboardAdmin() {
     });
   };
 
+  // Usuario actual (simulado por ahora)
+  const [user, setUser] = useState({ email: "", role: "admin" });
+  useEffect(() => {
+    if (window.__currentUser) setUser(window.__currentUser);
+    else setUser({ email: "admin@kuracisto.com", role: "admin" });
+  }, []);
+
   // Render
   return (
     <div style={{ maxWidth: "1200px", margin: "2rem auto", padding: "2rem", background: "#f3f4f6", borderRadius: "2rem", boxShadow: "0 4px 24px #0001" }}>
-      <div style={{ background: '#fffae5', color: '#b45309', padding: '1rem', borderRadius: '1rem', marginBottom: '1rem', textAlign: 'center', fontWeight: 'bold' }}>
-        Componente DashboardAdmin montado correctamente (prueba)
-      </div>
-      <h1 style={{ fontSize: "2.5rem", fontWeight: "bold", color: "#7c3aed", marginBottom: "2rem" }}>Dashboard Admin</h1>
+      <Header email={user.email} role={user.role} onLogout={() => window.location.href = "/users/sign_out"} />
       <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap" }}>
         <section style={sectionStyle}>
           <h2 style={sectionTitle}>CRUD Médicos</h2>
