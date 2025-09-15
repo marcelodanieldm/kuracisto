@@ -1,0 +1,32 @@
+<%= week_calendar(events: @turnos_semana, attribute: :fecha) do |date, turnos| %>
+  <tr>
+    <td class="border px-2 py-1 text-xs font-bold text-blue-900 bg-blue-50">
+      <%= l date, format: :short %>
+    </td>
+    <% (8..20).each do |hour| %>
+      <% [0,30].each do |min| %>
+        <% slot_time = date.to_datetime.change({ hour: hour, min: min }) %>
+        <% turno = turnos.find { |t| t.hora.hour == hour && t.hora.min == min } %>
+        <td class="border px-2 py-1 text-xs <%= turno&.reservado? ? 'bg-red-200' : 'bg-green-100' %>">
+          <% if turno %>
+            <strong><%= turno.paciente.nombre %></strong><br>
+            <span class="text-xs"><%= turno.estado %></span><br>
+            <% if turno.fecha >= Date.today %>
+              <%= link_to 'Editar', edit_turno_path(turno), class: 'bg-yellow-400 hover:bg-yellow-500 text-white px-2 py-1 rounded text-xs font-bold', data: { confirm: '¿Deseas modificar los datos de este turno reservado para el paciente "' + turno.paciente.nombre + '" el ' + l(turno.fecha, format: :long) + ' a las ' + turno.hora.strftime('%H:%M') + '?' } %>
+              <%= link_to 'Eliminar', turno_path(turno), method: :delete, data: { confirm: '¿Seguro que quieres cancelar el turno de "' + turno.paciente.nombre + '" el ' + l(turno.fecha, format: :long) + ' a las ' + turno.hora.strftime('%H:%M') + '? Esta acción no se puede deshacer.' }, class: 'bg-red-500 hover:bg-red-700 text-white px-2 py-1 rounded text-xs font-bold' %>
+            <% else %>
+              <span class="text-gray-400 text-xs">No se puede editar/cancelar turnos pasados</span>
+            <% end %>
+          <% else %>
+            <span class="text-xs text-gray-400">Libre</span><br>
+            <% if date >= Date.today %>
+              <%= link_to 'Reservar', new_turno_path(fecha: date, hora: slot_time.strftime('%H:%M'), medico_id: nil), class: 'bg-green-500 hover:bg-green-700 text-white px-2 py-1 rounded text-xs font-bold', data: { confirm: '¿Confirmas la reserva de este turno el ' + l(date, format: :long) + ' a las ' + slot_time.strftime('%H:%M') + '? Solo puedes reservar turnos futuros y no duplicados.' } %>
+            <% else %>
+              <span class="text-gray-400 text-xs">No se pueden reservar turnos pasados</span>
+            <% end %>
+          <% end %>
+        </td>
+      <% end %>
+    <% end %>
+  </tr>
+<% end %>

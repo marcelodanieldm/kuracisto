@@ -1,3 +1,4 @@
+gem 'simple_calendar'
 source "https://rubygems.org"   # <-- Esta línea debe ir AL INICIO del Gemfile, no aquí!
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
@@ -67,7 +68,7 @@ gem "cssbundling-rails"
 gem 'mailgun-ruby'              # Envío de emails (alternativa: mailer de Rails)
 gem 'dotenv-rails'              # Variables de entorno
 gem 'faker'                     # Datos de prueba
-gem "simple_calendar" #simple calendar https://github.com/excid3/simple_calendar
+gem 'simple_calendar', require: false #simple calendar https://github.com/excid3/simple_calendar
 gem "jsbundling-rails", "~> 1.3"
 
 gem "tailwindcss-rails", "~> 4.3"

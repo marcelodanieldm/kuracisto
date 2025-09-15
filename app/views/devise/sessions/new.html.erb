@@ -1,2 +1,21 @@
+<div style="margin: 2em 0; padding: 1em; border: 2px solid #ccc; border-radius: 8px; background: #f9f9f9;">
+	<h2>Prueba de Login HTML puro</h2>
+	<form action="/users/sign_in" method="post">
+		<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>" />
+		<div>
+			<label for="user_email">Email:</label>
+			<input type="email" name="user[email]" id="user_email" required />
+		</div>
+		<div>
+			<label for="user_password">Password:</label>
+			<input type="password" name="user[password]" id="user_password" required />
+		</div>
+		<div>
+			<label for="user_remember_me">Recordarme:</label>
+			<input type="checkbox" name="user[remember_me]" id="user_remember_me" value="1" />
+		</div>
+		<button type="submit">Login clásico</button>
+	</form>
+</div>
 <div id="react-login"></div>
 <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>

@@ -4,4 +4,5 @@ class Users::SessionsController < Devise::SessionsController
     Rails.logger.info "PARAMS RECIBIDOS EN LOGIN: #{params.inspect}"
     super
   end
+
 end

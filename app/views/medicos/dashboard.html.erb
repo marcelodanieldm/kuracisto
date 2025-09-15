@@ -1,3 +1,12 @@
+<% if flash[:alert] %>
+  <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
+    <strong>Error:</strong> <%= flash[:alert] %>
+  </div>
+<% end %>
+<div class="max-w-4xl mx-auto p-4">
+  <h2 class="text-xl font-semibold mb-4 text-blue-700">Reservas de Turnos (Semana)</h2>
+  <%= render partial: 'calendar' %>
+</div>
 <script>
   window.__currentUser = {
     email: "<%= current_user.email %>",

@@ -6,6 +6,19 @@ class Turno < ApplicationRecord
 
   validate :no_bloqueado
   validate :no_cancelar_menos_de_48h
+  validate :no_double_booking, on: :create
+  validate :no_multiple_turnos_paciente, on: :create
+  def no_double_booking
+    if Turno.where(fecha: fecha, hora: hora, medico_id: medico_id, estado: 'reservado').exists?
+      errors.add(:base, "Ya existe un turno reservado para este médico en ese horario.")
+    end
+  end
+
+  def no_multiple_turnos_paciente
+    if Turno.where(fecha: fecha, paciente_id: paciente_id, medico_id: medico_id, estado: 'reservado').exists?
+      errors.add(:base, "El paciente ya tiene un turno reservado con este médico en esa fecha.")
+    end
+  end
 
   private
 

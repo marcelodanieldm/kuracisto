@@ -6,17 +6,22 @@ class ApplicationController < ActionController::Base
 
   def after_sign_in_path_for(resource)
     if resource.is_a?(User)
-      case resource.role
-      when 'admin'
+      Rails.logger.info "AFTER SIGN IN: user_id=#{resource.id} role=#{resource.role} admin?=#{resource.admin?}"
+      if resource.admin?
+        Rails.logger.info "Redirigiendo a admin_dashboard_path"
         admin_dashboard_path
-      when 'medico'
+      elsif resource.medico?
+        Rails.logger.info "Redirigiendo a medicos_dashboard_path"
         medicos_dashboard_path
-      when 'empleado'
+      elsif resource.empleado?
+        Rails.logger.info "Redirigiendo a empleados_dashboard_path"
         empleados_dashboard_path
       else
+        Rails.logger.info "Redirigiendo a super (root)"
         super
       end
     else
+      Rails.logger.info "Redirigiendo a super (no User)"
       super
     end
   end
