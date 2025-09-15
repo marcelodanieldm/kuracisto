@@ -14,13 +14,13 @@ Rails.application.routes.draw do
   get '/confirmacion', to: 'pages#confirmacion', as: :react_confirmacion
   get '/perfil', to: 'pages#perfil', as: :react_perfil
   get '/registro', to: 'pages#registro', as: :react_registro
-    post '/medicos/bloquear_dia', to: 'medicos#bloquear_dia', as: :bloquear_dia_medicos
+  post '/medicos/bloquear_dia', to: 'medicos#bloquear_dia', as: :bloquear_dia_medicos
   post '/empleados/enviar_email_paciente', to: 'empleados#enviar_email_paciente', as: :enviar_email_paciente_empleados
-    post '/empleados/crear_paciente', to: 'empleados#crear_paciente', as: :crear_paciente_empleados
-    get '/empleados/editar_paciente/:id', to: 'empleados#editar_paciente', as: :editar_paciente_empleados
-    patch '/empleados/actualizar_paciente/:id', to: 'empleados#actualizar_paciente', as: :actualizar_paciente_empleados
-    delete '/empleados/eliminar_paciente/:id', to: 'empleados#eliminar_paciente', as: :eliminar_paciente_empleados
-    get '/empleados/nuevo_paciente', to: 'empleados#nuevo_paciente', as: :nuevo_paciente_empleados
+  post '/empleados/crear_paciente', to: 'empleados#crear_paciente', as: :crear_paciente_empleados
+  get '/empleados/editar_paciente/:id', to: 'empleados#editar_paciente', as: :editar_paciente_empleados
+  patch '/empleados/actualizar_paciente/:id', to: 'empleados#actualizar_paciente', as: :actualizar_paciente_empleados
+  delete '/empleados/eliminar_paciente/:id', to: 'empleados#eliminar_paciente', as: :eliminar_paciente_empleados
+  get '/empleados/nuevo_paciente', to: 'empleados#nuevo_paciente', as: :nuevo_paciente_empleados
 
   devise_for :users
   # Custom React login and recovery routes (mount React component, submit to Devise)

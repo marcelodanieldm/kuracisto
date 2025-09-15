@@ -19,18 +19,20 @@ export default function Login() {
     setError("");
     setSuccess("");
     try {
+  const params = new URLSearchParams();
+  params.append('user[email]', email);
+  params.append('user[password]', password);
+  params.append('user[remember_me]', '0');
+      // Obtener CSRF token de meta tag
+      const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
       const res = await fetch("/users/sign_in", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          ...(csrf ? { 'X-CSRF-Token': csrf } : {})
         },
-        body: JSON.stringify({
-          user: {
-            email,
-            password
-          }
-        })
+        body: params.toString()
       });
       if (res.ok) {
         setSuccess("¡Login exitoso! Redirigiendo...");
