@@ -19,10 +19,10 @@ export default function Login() {
     setError("");
     setSuccess("");
     try {
-  const params = new URLSearchParams();
-  params.append('user[email]', email);
-  params.append('user[password]', password);
-  params.append('user[remember_me]', '0');
+      const params = new URLSearchParams();
+      params.append('user[email]', email);
+      params.append('user[password]', password);
+      params.append('user[remember_me]', '0');
       // Obtener CSRF token de meta tag
       const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
       const res = await fetch("/users/sign_in", {

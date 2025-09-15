@@ -22,7 +22,7 @@ Rails.application.routes.draw do
   delete '/empleados/eliminar_paciente/:id', to: 'empleados#eliminar_paciente', as: :eliminar_paciente_empleados
   get '/empleados/nuevo_paciente', to: 'empleados#nuevo_paciente', as: :nuevo_paciente_empleados
 
-  devise_for :users
+  devise_for :users, controllers: { sessions: 'users/sessions' }
   # Custom React login and recovery routes (mount React component, submit to Devise)
   get '/login', to: 'pages#login', as: :react_login
   get '/recuperar', to: 'pages#recuperar', as: :react_recuperar

@@ -62,13 +62,12 @@ group :test do
   gem "selenium-webdriver"
 end
 
-
+gem 'rufus-scheduler', '~> 3.9', '>= 3.9.2' # manejador de eventos https://github.com/jmettraux/rufus-scheduler
 gem "cssbundling-rails"
-gem 'jquery-rails'              # Para Bootstrap JS (opcional)
 gem 'mailgun-ruby'              # Envío de emails (alternativa: mailer de Rails)
 gem 'dotenv-rails'              # Variables de entorno
 gem 'faker'                     # Datos de prueba
-
+gem "simple_calendar" #simple calendar https://github.com/excid3/simple_calendar
 gem "jsbundling-rails", "~> 1.3"
 
 gem "tailwindcss-rails", "~> 4.3"
