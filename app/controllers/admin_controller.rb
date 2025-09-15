@@ -1,4 +1,5 @@
 class AdminController < ApplicationController
+  helper SimpleCalendar::CalendarHelper
   before_action :authenticate_user!
   before_action :require_admin
 

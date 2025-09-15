@@ -1,0 +1,17 @@
+<%= week_calendar(events: @turnos, attribute: :fecha, week_start: :monday, show_today: true) do |date, turnos| %>
+  <% turnos.each do |turno| %>
+    <div class="calendar-slot #{turno.estado}">
+      <strong><%= turno.hora.strftime('%H:%M') %></strong> - <%= turno.paciente.nombre %> <%= turno.paciente.apellido %>
+      <span class="estado"><%= turno.estado %></span>
+      <%= link_to 'Editar', edit_turno_path(turno), class: 'btn btn-sm btn-warning' %>
+      <%= link_to 'Eliminar', turno_path(turno), method: :delete, data: { confirm: '¿Seguro que deseas eliminar este turno?' }, class: 'btn btn-sm btn-danger' %>
+      <% if turno.errors.any? %>
+        <div class="error-messages">
+          <% turno.errors.full_messages.each do |msg| %>
+            <span class="text-danger"><%= msg %></span>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>
