@@ -1,0 +1,49 @@
+<div class="max-w-lg mx-auto p-6 bg-white rounded shadow">
+  <h2 class="text-2xl font-bold mb-4 text-blue-800">Historia clínica de <%= @paciente.full_name %></h2>
+  <%= form_with model: @historia, url: crear_historia_medicos_path, local: true, html: { multipart: true } do |f| %>
+    <%= f.hidden_field :paciente_id, value: @paciente.id %>
+    <div class="mb-4">
+      <%= f.label :fecha, "Fecha", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.date_field :fecha, class: "mt-1 block w-full border-gray-300 rounded-md" %>
+    </div>
+    <div class="mb-4">
+      <%= f.label :diagnostico, "Diagnóstico", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.text_area :diagnostico, rows: 2, class: "mt-1 block w-full border-gray-300 rounded-md" %>
+    </div>
+    <div class="mb-4">
+      <%= f.label :tratamiento, "Tratamiento", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.text_area :tratamiento, rows: 2, class: "mt-1 block w-full border-gray-300 rounded-md" %>
+    </div>
+    <div class="mb-4">
+      <%= f.label :observaciones, "Comentarios adicionales", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.text_area :observaciones, rows: 2, class: "mt-1 block w-full border-gray-300 rounded-md" %>
+    </div>
+    <div class="mb-4">
+      <%= f.label :receta_pdf, "Adjuntar receta (PDF)", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.file_field :receta_pdf, accept: 'application/pdf', class: "mt-1 block w-full border-gray-300 rounded-md" %>
+    </div>
+    <div class="flex justify-end">
+      <%= f.submit "Guardar historia clínica", class: "px-4 py-2 rounded bg-green-600 hover:bg-green-700 text-white font-semibold" %>
+    </div>
+  <% end %>
+</div>
+
+<% if @historias_previas.any? %>
+  <div class="max-w-lg mx-auto mt-8 p-6 bg-white rounded shadow">
+    <h3 class="text-xl font-bold mb-2 text-blue-700">Historial de historias clínicas</h3>
+    <ul class="divide-y divide-gray-200">
+      <% @historias_previas.each do |historia| %>
+        <li class="py-2">
+          <div class="font-semibold text-gray-800"><%= historia.fecha %> - <%= historia.diagnostico.truncate(40) %></div>
+          <div class="text-sm text-gray-600">Tratamiento: <%= historia.tratamiento.truncate(40) %></div>
+          <div class="text-xs text-gray-500">Comentarios: <%= historia.observaciones.truncate(60) %></div>
+          <% if historia.receta_pdf.attached? %>
+            <div class="mt-1">
+              <a href="<%= url_for(historia.receta_pdf) %>" target="_blank" class="text-blue-600 underline text-xs">Ver receta PDF</a>
+            </div>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

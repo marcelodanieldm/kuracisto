@@ -3,8 +3,13 @@ class EmpleadosController < ApplicationController
   before_action :require_empleado
 
   def dashboard
-    @pacientes = Paciente.all.order(:nombre)
-    @turnos = Turno.joins(:paciente).where.not(estado: 'bloqueado').order(fecha: :desc, hora: :asc)
+    if params[:busqueda].present?
+      query = params[:busqueda].strip
+      @pacientes = Paciente.where("nombre ILIKE ? OR apellido ILIKE ?", "%#{query}%", "%#{query}%").order(:nombre)
+    else
+      @pacientes = Paciente.all.order(:nombre)
+    end
+    @turnos = Turno.joins(:paciente).where(estado: 'reservado').order(fecha: :desc, hora: :asc)
     @asistieron = Turno.where(estado: 'asistio').joins(:paciente)
     @faltaron = Turno.where(estado: 'faltado').joins(:paciente)
   end

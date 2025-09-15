@@ -1,0 +1,67 @@
+<div id="calendar-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+  <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+    <h3 class="text-lg font-bold mb-4" id="calendar-modal-title">Reservar turno para <span id="calendar-modal-date" class="font-mono"></span></h3>
+    <%= form_with url: reservar_turno_path, method: :post, local: true, id: "calendar-reserva-form" do |f| %>
+      <%= f.hidden_field :fecha, id: "calendar-modal-fecha" %>
+      <%= f.hidden_field :turno_id, id: "calendar-modal-turno-id" %>
+      <div class="mb-4">
+        <%= f.label :paciente_id, "Paciente", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.collection_select :paciente_id, @pacientes, :id, :full_name, {prompt: "Selecciona paciente"}, class: "mt-1 block w-full border-gray-300 rounded-md", id: "calendar-modal-paciente-id" %>
+        <div class="mt-2">
+          <% if controller_name == 'medicos' %>
+            <%= link_to "Crear paciente nuevo", nuevo_paciente_medicos_path, class: "text-blue-600 underline text-xs" %>
+          <% else %>
+            <%= link_to "Crear paciente nuevo", nuevo_paciente_empleados_path, class: "text-blue-600 underline text-xs" %>
+          <% end %>
+        </div>
+      </div>
+      <div class="mb-4">
+        <%= f.label :hora, "Hora", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.time_field :hora, class: "mt-1 block w-full border-gray-300 rounded-md", id: "calendar-modal-hora" %>
+      </div>
+      <div class="flex justify-end">
+        <button type="button" onclick="document.getElementById('calendar-modal').classList.add('hidden')" class="mr-2 px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-700">Cancelar</button>
+        <%= f.submit "Guardar", class: "px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white font-semibold" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+<script>
+
+  document.querySelectorAll('.calendar-day').forEach(function(day) {
+    day.addEventListener('click', function() {
+      var fecha = day.getAttribute('data-date');
+      document.getElementById('calendar-modal-title').textContent = 'Reservar turno para ' + fecha;
+      document.getElementById('calendar-modal-date').textContent = fecha;
+      document.getElementById('calendar-modal-fecha').value = fecha;
+      document.getElementById('calendar-modal-turno-id').value = '';
+      document.getElementById('calendar-modal-paciente-id').value = '';
+      document.getElementById('calendar-modal-hora').value = '';
+      document.getElementById('calendar-modal').classList.remove('hidden');
+    });
+  });
+
+  document.querySelectorAll('.reservar-turno-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      var pacienteId = btn.getAttribute('data-paciente_id');
+      document.getElementById('calendar-modal-title').textContent = 'Reservar turno para paciente';
+      document.getElementById('calendar-modal-date').textContent = '';
+      document.getElementById('calendar-modal-fecha').value = '';
+      document.getElementById('calendar-modal-turno-id').value = '';
+      document.getElementById('calendar-modal-paciente-id').value = pacienteId;
+      document.getElementById('calendar-modal-hora').value = '';
+      document.getElementById('calendar-modal').classList.remove('hidden');
+    });
+  });
+
+  window.openEditTurnoModal = function(turnoId, fecha, hora, pacienteId) {
+    document.getElementById('calendar-modal-title').textContent = 'Editar turno ' + turnoId;
+    document.getElementById('calendar-modal-date').textContent = fecha;
+    document.getElementById('calendar-modal-fecha').value = fecha;
+    document.getElementById('calendar-modal-turno-id').value = turnoId;
+    document.getElementById('calendar-modal-paciente-id').value = pacienteId;
+    document.getElementById('calendar-modal-hora').value = hora;
+    document.getElementById('calendar-modal').classList.remove('hidden');
+  }
+</script>

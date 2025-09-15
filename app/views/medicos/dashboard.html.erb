@@ -1,3 +1,75 @@
+  <div class="mb-8 bg-white rounded shadow p-4">
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-4 gap-4">
+      <div>
+        <h2 class="text-xl font-semibold text-blue-700">Buscar historias clínicas</h2>
+      </div>
+      <div class="flex gap-2 items-center">
+        <%= form_with url: medicos_dashboard_path, method: :get, local: true, class: "flex gap-2" do |f| %>
+          <%= f.text_field :busqueda, value: params[:busqueda], placeholder: "Buscar por nombre o apellido", class: "border rounded px-2 py-1 text-sm" %>
+          <%= f.submit "Buscar", class: "bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs font-semibold transition" %>
+        <% end %>
+      </div>
+    </div>
+    <% if @buscador_paciente %>
+      <div class="mt-4">
+        <h3 class="text-lg font-bold text-blue-700 mb-2">Resultados para <%= @buscador_paciente.full_name %></h3>
+        <h4 class="font-semibold text-gray-700 mb-1">Historial de turnos</h4>
+        <ul class="list-disc pl-5 text-gray-700 mb-4">
+          <% @buscador_paciente.turnos.order(fecha: :desc, hora: :desc).each do |t| %>
+            <li><%= t.fecha %> - <%= t.hora %> (<%= t.estado %>)</li>
+          <% end %>
+        </ul>
+        <h4 class="font-semibold text-gray-700 mb-1">Historias clínicas</h4>
+        <ul class="list-disc pl-5 text-gray-700">
+          <% @buscador_paciente.historia_clinicas.order(fecha: :desc).each do |h| %>
+            <li><strong><%= h.fecha %></strong>: <%= h.diagnostico.truncate(60) %> <% if h.receta_pdf.attached? %> - <a href="<%= url_for(h.receta_pdf) %>" target="_blank" class="text-blue-600 underline text-xs">Ver receta PDF</a><% end %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  </div>
+  <div class="mb-8 bg-white rounded shadow p-4">
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-4 gap-4">
+      <div>
+        <h2 class="text-xl font-semibold text-blue-700">Administrar pacientes</h2>
+      </div>
+      <div class="flex gap-2 items-center">
+        <%= link_to "Reservar turno", "#calendar-section", class: "bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-semibold transition" %>
+        <%= link_to "Agregar paciente", nuevo_paciente_medicos_path, class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-semibold transition" %>
+      </div>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nombre</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">DNI</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Teléfono</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Tipo</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Última visita</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% Paciente.all.order(:nombre).each do |p| %>
+            <tr>
+              <td class="px-4 py-2"><%= p.full_name %></td>
+              <td class="px-4 py-2"><%= p.dni %></td>
+              <td class="px-4 py-2"><%= p.telefono %></td>
+              <td class="px-4 py-2"><%= p.tipo_seguro %></td>
+              <td class="px-4 py-2"><%= p.turnos.last&.fecha || "Nunca" %></td>
+              <td class="px-4 py-2 space-x-2">
+                <%= link_to "Historia clínica", historia_clinica_paciente_medicos_path(p), class: "bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded text-xs font-semibold transition" %>
+                <%= link_to "Editar", editar_paciente_medicos_path(p), class: "bg-yellow-400 hover:bg-yellow-500 text-white px-2 py-1 rounded text-xs font-semibold transition" %>
+                <%= link_to "Borrar", eliminar_paciente_medicos_path(p), method: :delete, class: "bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-xs font-semibold transition", data: { confirm: "¿Estás seguro?" } %>
+                <%= button_to "Reservar turno", '#', class: "bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded text-xs font-semibold transition reservar-turno-btn", data: { paciente_id: p.id } %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
 <div class="max-w-4xl mx-auto p-4">
   <h1 class="text-3xl font-bold mb-6 text-blue-800">Dashboard Médico</h1>
@@ -41,7 +113,8 @@
     </ul>
   </div>
 
-  <%= render 'shared/calendar' %>
+  <%= render 'shared/calendar', turnos: @turnos %>
+  <%= render 'shared/calendar_modal', pacientes: @pacientes %>
 
   <div class="mb-8 bg-white rounded shadow p-4">
     <div class="flex justify-between items-center mb-4">

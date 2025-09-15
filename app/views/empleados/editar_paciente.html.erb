@@ -1,0 +1,42 @@
+<div class="max-w-lg mx-auto p-6 bg-white rounded shadow">
+  <h2 class="text-2xl font-bold mb-4 text-blue-800">Editar paciente</h2>
+  <%= form_with model: @paciente, url: actualizar_paciente_empleados_path(@paciente), method: :patch, local: true do |f| %>
+    <div class="mb-4">
+      <%= f.label :nombre, "Nombre", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.text_field :nombre, class: "mt-1 block w-full border-gray-300 rounded-md" %>
+    </div>
+    <div class="mb-4">
+      <%= f.label :apellido, "Apellido", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.text_field :apellido, class: "mt-1 block w-full border-gray-300 rounded-md" %>
+    </div>
+    <div class="mb-4">
+      <%= f.label :edad, "Edad", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.number_field :edad, class: "mt-1 block w-full border-gray-300 rounded-md", min: 0 %>
+    </div>
+    <div class="mb-4">
+      <%= f.label :prepaga, "Prepaga (opcional)", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.text_field :prepaga, class: "mt-1 block w-full border-gray-300 rounded-md" %>
+    </div>
+    <div class="mb-4">
+      <%= f.label :particular, "Particular (opcional)", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.text_field :particular, class: "mt-1 block w-full border-gray-300 rounded-md" %>
+    </div>
+    <div class="flex justify-end">
+      <%= f.submit "Actualizar", class: "px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white font-semibold" %>
+    </div>
+  <% end %>
+</div>
+
+<% if @paciente && @paciente.persisted? %>
+  <div class="max-w-lg mx-auto mt-8 p-6 bg-white rounded shadow">
+    <h3 class="text-xl font-bold mb-2 text-blue-700">Historial de turnos</h3>
+    <ul class="divide-y divide-gray-200">
+      <% @paciente.turnos.order(fecha: :desc, hora: :desc).each do |turno| %>
+        <li class="py-2 flex justify-between items-center">
+          <span><%= turno.fecha %> - <%= turno.hora.strftime('%H:%M') %></span>
+          <span class="text-xs <%= turno.estado == 'reservado' ? 'text-green-700' : 'text-gray-500' %>"><%= turno.estado %></span>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
