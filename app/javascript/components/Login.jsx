@@ -1,5 +1,7 @@
 
 import React, { useState } from "react";
+import { FaUser, FaLock } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -77,17 +79,26 @@ export default function Login() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f3f4f6", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <div style={{ background: "#fff", borderRadius: "1.5rem", boxShadow: "0 4px 24px #0001", padding: "2rem", minWidth: "350px" }}>
-        <h2 style={{ fontSize: "2rem", fontWeight: "bold", color: "#2563eb", marginBottom: "1.5rem", textAlign: "center" }}>{showRecovery ? "Recuperar contraseña" : "Iniciar sesión"}</h2>
+    <div style={{ minHeight: "100vh", background: "linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ background: "#fff", borderRadius: "2rem", boxShadow: "0 8px 32px #0002", padding: "2.5rem 2rem", minWidth: "370px", maxWidth: "95vw" }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "2rem" }}>
+          <img src="/icon.png" alt="Kuracisto" style={{ width: 64, height: 64, marginBottom: "0.5rem" }} />
+          <h2 style={{ fontSize: "2.2rem", fontWeight: "bold", color: "#7c3aed", marginBottom: "0.5rem", textAlign: "center", letterSpacing: "-1px" }}>{showRecovery ? "Recuperar contraseña" : "Iniciar sesión"}</h2>
+        </div>
         {error && <div style={errorStyle}>{error}</div>}
         {success && <div style={successStyle}>{success}</div>}
         {!showRecovery ? (
           <form onSubmit={handleLogin}>
-            <label style={labelStyle}>Email</label>
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)} style={inputStyle} placeholder="Correo electrónico" required />
-            <label style={labelStyle}>Contraseña</label>
-            <input type="password" value={password} onChange={e => setPassword(e.target.value)} style={inputStyle} placeholder="Contraseña" required />
+            <div style={{ position: "relative", marginBottom: "1.5rem" }}>
+              <label style={labelStyle}><MdEmail style={{ marginRight: 6, verticalAlign: "middle" }} /> Email</label>
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)} style={{ ...inputStyle, paddingLeft: "2.5rem" }} placeholder="Correo electrónico" required />
+              <FaUser style={{ position: "absolute", left: 10, top: 38, color: "#7c3aed", fontSize: "1.2rem" }} />
+            </div>
+            <div style={{ position: "relative", marginBottom: "1.5rem" }}>
+              <label style={labelStyle}><FaLock style={{ marginRight: 6, verticalAlign: "middle" }} /> Contraseña</label>
+              <input type="password" value={password} onChange={e => setPassword(e.target.value)} style={{ ...inputStyle, paddingLeft: "2.5rem" }} placeholder="Contraseña" required />
+              <FaLock style={{ position: "absolute", left: 10, top: 38, color: "#7c3aed", fontSize: "1.2rem" }} />
+            </div>
             <button type="submit" style={btnStyle} disabled={loading}>{loading ? "Accediendo..." : "Acceder"}</button>
             <div style={{ textAlign: "right", marginTop: "0.5rem" }}>
               <button type="button" style={linkStyle} onClick={() => setShowRecovery(true)}>¿Olvidaste tu contraseña?</button>
@@ -95,8 +106,11 @@ export default function Login() {
           </form>
         ) : (
           <form onSubmit={handleRecovery}>
-            <label style={labelStyle}>Correo electrónico</label>
-            <input type="email" value={recoveryEmail} onChange={e => setRecoveryEmail(e.target.value)} style={inputStyle} placeholder="Correo electrónico" required />
+            <div style={{ position: "relative", marginBottom: "1.5rem" }}>
+              <label style={labelStyle}><MdEmail style={{ marginRight: 6, verticalAlign: "middle" }} /> Correo electrónico</label>
+              <input type="email" value={recoveryEmail} onChange={e => setRecoveryEmail(e.target.value)} style={{ ...inputStyle, paddingLeft: "2.5rem" }} placeholder="Correo electrónico" required />
+              <FaUser style={{ position: "absolute", left: 10, top: 38, color: "#7c3aed", fontSize: "1.2rem" }} />
+            </div>
             <button type="submit" style={btnStyle} disabled={loading}>{loading ? "Enviando..." : "Enviar recuperación"}</button>
             <div style={{ textAlign: "right", marginTop: "0.5rem" }}>
               <button type="button" style={linkStyle} onClick={() => setShowRecovery(false)}>Volver al login</button>
