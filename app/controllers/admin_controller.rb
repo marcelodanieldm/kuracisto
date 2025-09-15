@@ -4,8 +4,13 @@ class AdminController < ApplicationController
   before_action :require_admin
 
   def dashboard
-    @medicos = Medico.all.order(:apellido, :nombre)
+  @medicos = Medico.all.order(:nombre)
     @empleados = User.where(role: :empleado).order(:apellido, :nombre)
+    @turnos = Turno.includes(:paciente).order(:fecha, :hora)
+    respond_to do |format|
+      format.html
+      format.json { render json: { medicos: @medicos, empleados: @empleados, turnos: @turnos.as_json(include: { paciente: { only: [:nombre, :apellido] } }) } }
+    end
   end
 
   # MÉDICOS CRUD

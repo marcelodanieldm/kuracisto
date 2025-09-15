@@ -13,5 +13,6 @@
 		email: "<%= current_user.email %>",
 		role: "<%= current_user.role %>"
 	};
+	window.__turnos = <%= raw(@turnos.to_json(include: { paciente: { only: [:nombre, :apellido] } })) %>;
 </script>
 <div id="react-dashboard-empleado"></div>

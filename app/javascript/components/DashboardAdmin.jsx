@@ -2,13 +2,27 @@ console.log('DashboardAdmin loaded');
 
 import React, { useState, useEffect } from "react";
 import Header from "./Header";
+import AdminCalendar from "./AdminCalendar";
 
 
-export default function DashboardAdmin() {
   // Mensaje de prueba para verificar montaje
   if (typeof window !== 'undefined') {
     window.__dashboardAdminMounted = true;
   }
+  // Turnos reales expuestos por Rails
+  const [turnos, setTurnos] = useState([]);
+  useEffect(() => {
+    if (window.__turnos && Array.isArray(window.__turnos)) {
+      setTurnos(window.__turnos);
+    } else {
+      // Si no hay turnos en window, los pide por fetch
+      fetch('/admin/dashboard.json')
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (data && data.turnos) setTurnos(data.turnos);
+        });
+    }
+  }, []);
   // CRUD Médicos
   const [medicos, setMedicos] = useState([]);
   const [loadingMedicos, setLoadingMedicos] = useState(false);
@@ -224,100 +238,101 @@ export default function DashboardAdmin() {
 
   // Render
   return (
-    <div style={{ maxWidth: "1200px", margin: "2rem auto", padding: "2rem", background: "#f3f4f6", borderRadius: "2rem", boxShadow: "0 4px 24px #0001" }}>
+  <div className="max-w-6xl mx-auto my-8 p-8 bg-gray-100 rounded-3xl shadow-2xl">
       <Header email={user.email} role={user.role} onLogout={() => window.location.href = "/users/sign_out"} />
-      <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap" }}>
-        <section style={sectionStyle}>
-          <h2 style={sectionTitle}>CRUD Médicos</h2>
+      <AdminCalendar turnos={turnos} />
+  <div className="flex flex-wrap gap-8">
+  <section className="bg-white rounded-xl shadow-lg p-6 flex-1 min-w-[400px] mb-8">
+          <h2 className="text-xl font-bold text-violet-600 mb-4">CRUD Médicos</h2>
           <p>Campos: DNI, Nombre, Apellido, Matrícula, Fecha de ingreso, Email, Especialidad</p>
-          {errorMedicos && <div style={errorStyle}>{errorMedicos}</div>}
-          <form onSubmit={editMedicoId ? handleUpdateMedico : handleCreateMedico} style={{ marginBottom: "1.5rem" }}>
-            <input type="text" placeholder="Nombre" value={formMedico.nombre} onChange={e => setFormMedico(f => ({ ...f, nombre: e.target.value }))} style={inputStyle} required />
-            <input type="text" placeholder="Apellido" value={formMedico.apellido} onChange={e => setFormMedico(f => ({ ...f, apellido: e.target.value }))} style={inputStyle} required />
-            <input type="text" placeholder="DNI" value={formMedico.dni} onChange={e => setFormMedico(f => ({ ...f, dni: e.target.value }))} style={inputStyle} required />
-            <input type="text" placeholder="Matrícula" value={formMedico.matricula} onChange={e => setFormMedico(f => ({ ...f, matricula: e.target.value }))} style={inputStyle} required />
-            <input type="date" placeholder="Fecha de ingreso" value={formMedico.fecha_ingreso} onChange={e => setFormMedico(f => ({ ...f, fecha_ingreso: e.target.value }))} style={inputStyle} required />
-            <input type="email" placeholder="Email" value={formMedico.email} onChange={e => setFormMedico(f => ({ ...f, email: e.target.value }))} style={inputStyle} required />
-            <input type="text" placeholder="Especialidad" value={formMedico.especialidad} onChange={e => setFormMedico(f => ({ ...f, especialidad: e.target.value }))} style={inputStyle} required />
-            <button type="submit" style={btnStyle}>{editMedicoId ? "Actualizar" : "Crear"}</button>
-            {editMedicoId && <button type="button" style={cancelBtnStyle} onClick={() => { setEditMedicoId(null); setFormMedico({ nombre: "", apellido: "", dni: "", matricula: "", fecha_ingreso: "", especialidad: "", email: "" }); }}>Cancelar</button>}
+          {errorMedicos && <div className="bg-red-200 text-red-700 p-3 rounded-xl mb-4 text-center font-bold">{errorMedicos}</div>}
+          <form onSubmit={editMedicoId ? handleUpdateMedico : handleCreateMedico} className="mb-6 space-y-3">
+            <input type="text" placeholder="Nombre" value={formMedico.nombre} onChange={e => setFormMedico(f => ({ ...f, nombre: e.target.value }))} className="w-full p-3 rounded-xl border border-gray-300 mb-3 text-base" required />
+            <input type="text" placeholder="Apellido" value={formMedico.apellido} onChange={e => setFormMedico(f => ({ ...f, apellido: e.target.value }))} className="w-full p-3 rounded-xl border border-gray-300 mb-3 text-base" required />
+            <input type="text" placeholder="DNI" value={formMedico.dni} onChange={e => setFormMedico(f => ({ ...f, dni: e.target.value }))} className="w-full p-3 rounded-xl border border-gray-300 mb-3 text-base" required />
+            <input type="text" placeholder="Matrícula" value={formMedico.matricula} onChange={e => setFormMedico(f => ({ ...f, matricula: e.target.value }))} className="w-full p-3 rounded-xl border border-gray-300 mb-3 text-base" required />
+            <input type="date" placeholder="Fecha de ingreso" value={formMedico.fecha_ingreso} onChange={e => setFormMedico(f => ({ ...f, fecha_ingreso: e.target.value }))} className="w-full p-3 rounded-xl border border-gray-300 mb-3 text-base" required />
+            <input type="email" placeholder="Email" value={formMedico.email} onChange={e => setFormMedico(f => ({ ...f, email: e.target.value }))} className="w-full p-3 rounded-xl border border-gray-300 mb-3 text-base" required />
+            <input type="text" placeholder="Especialidad" value={formMedico.especialidad} onChange={e => setFormMedico(f => ({ ...f, especialidad: e.target.value }))} className="w-full p-3 rounded-xl border border-gray-300 mb-3 text-base" required />
+            <button type="submit" className="bg-violet-600 text-white px-6 py-3 rounded-xl font-bold text-base border-none cursor-pointer mr-2 hover:bg-violet-700 transition">{editMedicoId ? "Actualizar" : "Crear"}</button>
+            {editMedicoId && <button type="button" className="bg-gray-200 text-gray-700 px-6 py-3 rounded-xl font-bold text-base border-none cursor-pointer hover:bg-gray-300 transition" onClick={() => { setEditMedicoId(null); setFormMedico({ nombre: "", apellido: "", dni: "", matricula: "", fecha_ingreso: "", especialidad: "", email: "" }); }}>Cancelar</button>}
           </form>
-          <table style={tableStyle}>
-            <thead>
+          <table className="w-full border-collapse mt-4">
+            <thead className="bg-gray-100">
               <tr>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>DNI</th>
-                <th>Matrícula</th>
-                <th>Fecha ingreso</th>
-                <th>Email</th>
-                <th>Especialidad</th>
-                <th>Acciones</th>
+                <th className="p-2 font-semibold">Nombre</th>
+                <th className="p-2 font-semibold">Apellido</th>
+                <th className="p-2 font-semibold">DNI</th>
+                <th className="p-2 font-semibold">Matrícula</th>
+                <th className="p-2 font-semibold">Fecha ingreso</th>
+                <th className="p-2 font-semibold">Email</th>
+                <th className="p-2 font-semibold">Especialidad</th>
+                <th className="p-2 font-semibold">Acciones</th>
               </tr>
             </thead>
             <tbody>
               {loadingMedicos ? (
-                <tr><td colSpan={8}>Cargando...</td></tr>
+                <tr><td colSpan={8} className="text-center py-4">Cargando...</td></tr>
               ) : medicos.length === 0 ? (
-                <tr><td colSpan={8}>Sin médicos</td></tr>
+                <tr><td colSpan={8} className="text-center py-4">Sin médicos</td></tr>
               ) : medicos.map(medico => (
-                <tr key={medico.id}>
-                  <td>{medico.nombre}</td>
-                  <td>{medico.apellido}</td>
-                  <td>{medico.dni}</td>
-                  <td>{medico.matricula}</td>
-                  <td>{medico.fecha_ingreso}</td>
-                  <td>{medico.email}</td>
-                  <td>{medico.especialidad}</td>
-                  <td>
-                    <button style={actionBtnStyle} onClick={() => handleEditMedico(medico)}>Editar</button>
-                    <button style={deleteBtnStyle} onClick={() => handleDeleteMedico(medico.id)}>Eliminar</button>
+                <tr key={medico.id} className="hover:bg-gray-50">
+                  <td className="p-2">{medico.nombre}</td>
+                  <td className="p-2">{medico.apellido}</td>
+                  <td className="p-2">{medico.dni}</td>
+                  <td className="p-2">{medico.matricula}</td>
+                  <td className="p-2">{medico.fecha_ingreso}</td>
+                  <td className="p-2">{medico.email}</td>
+                  <td className="p-2">{medico.especialidad}</td>
+                  <td className="p-2">
+                    <button className="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold text-sm border-none cursor-pointer mr-2 hover:bg-blue-700 transition" onClick={() => handleEditMedico(medico)}>Editar</button>
+                    <button className="bg-red-500 text-white px-4 py-2 rounded-lg font-bold text-sm border-none cursor-pointer hover:bg-red-600 transition" onClick={() => handleDeleteMedico(medico.id)}>Eliminar</button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </section>
-        <section style={sectionStyle}>
-          <h2 style={sectionTitle}>CRUD Empleados</h2>
+  <section className="bg-white rounded-xl shadow-lg p-6 flex-1 min-w-[400px] mb-8">
+          <h2 className="text-xl font-bold text-violet-600 mb-4">CRUD Empleados</h2>
           <p>Campos: Nombre y Apellido, Fecha de ingreso, DNI</p>
-          {errorEmpleados && <div style={errorStyle}>{errorEmpleados}</div>}
-          <form onSubmit={editEmpleadoId ? handleUpdateEmpleado : handleCreateEmpleado} style={{ marginBottom: "1.5rem" }}>
-            <input type="text" placeholder="Nombre" value={formEmpleado.nombre} onChange={e => setFormEmpleado(f => ({ ...f, nombre: e.target.value }))} style={inputStyle} required />
-            <input type="text" placeholder="Apellido" value={formEmpleado.apellido} onChange={e => setFormEmpleado(f => ({ ...f, apellido: e.target.value }))} style={inputStyle} required />
-            <input type="date" placeholder="Fecha de ingreso" value={formEmpleado.fecha_ingreso} onChange={e => setFormEmpleado(f => ({ ...f, fecha_ingreso: e.target.value }))} style={inputStyle} required />
-            <input type="text" placeholder="DNI" value={formEmpleado.dni} onChange={e => setFormEmpleado(f => ({ ...f, dni: e.target.value }))} style={inputStyle} required />
-            <input type="email" placeholder="Email" value={formEmpleado.email} onChange={e => setFormEmpleado(f => ({ ...f, email: e.target.value }))} style={inputStyle} required />
-            <input type="password" placeholder="Contraseña" value={formEmpleado.password} onChange={e => setFormEmpleado(f => ({ ...f, password: e.target.value }))} style={inputStyle} required={!editEmpleadoId} />
-            <button type="submit" style={btnStyle}>{editEmpleadoId ? "Actualizar" : "Crear"}</button>
-            {editEmpleadoId && <button type="button" style={cancelBtnStyle} onClick={() => { setEditEmpleadoId(null); setFormEmpleado({ nombre: "", apellido: "", fecha_ingreso: "", dni: "", email: "", password: "" }); }}>Cancelar</button>}
+          {errorEmpleados && <div className="bg-red-200 text-red-700 p-3 rounded-xl mb-4 text-center font-bold">{errorEmpleados}</div>}
+          <form onSubmit={editEmpleadoId ? handleUpdateEmpleado : handleCreateEmpleado} className="mb-6 space-y-3">
+            <input type="text" placeholder="Nombre" value={formEmpleado.nombre} onChange={e => setFormEmpleado(f => ({ ...f, nombre: e.target.value }))} className="w-full p-3 rounded-xl border border-gray-300 mb-3 text-base" required />
+            <input type="text" placeholder="Apellido" value={formEmpleado.apellido} onChange={e => setFormEmpleado(f => ({ ...f, apellido: e.target.value }))} className="w-full p-3 rounded-xl border border-gray-300 mb-3 text-base" required />
+            <input type="date" placeholder="Fecha de ingreso" value={formEmpleado.fecha_ingreso} onChange={e => setFormEmpleado(f => ({ ...f, fecha_ingreso: e.target.value }))} className="w-full p-3 rounded-xl border border-gray-300 mb-3 text-base" required />
+            <input type="text" placeholder="DNI" value={formEmpleado.dni} onChange={e => setFormEmpleado(f => ({ ...f, dni: e.target.value }))} className="w-full p-3 rounded-xl border border-gray-300 mb-3 text-base" required />
+            <input type="email" placeholder="Email" value={formEmpleado.email} onChange={e => setFormEmpleado(f => ({ ...f, email: e.target.value }))} className="w-full p-3 rounded-xl border border-gray-300 mb-3 text-base" required />
+            <input type="password" placeholder="Contraseña" value={formEmpleado.password} onChange={e => setFormEmpleado(f => ({ ...f, password: e.target.value }))} className="w-full p-3 rounded-xl border border-gray-300 mb-3 text-base" required={!editEmpleadoId} />
+            <button type="submit" className="bg-violet-600 text-white px-6 py-3 rounded-xl font-bold text-base border-none cursor-pointer mr-2 hover:bg-violet-700 transition">{editEmpleadoId ? "Actualizar" : "Crear"}</button>
+            {editEmpleadoId && <button type="button" className="bg-gray-200 text-gray-700 px-6 py-3 rounded-xl font-bold text-base border-none cursor-pointer hover:bg-gray-300 transition" onClick={() => { setEditEmpleadoId(null); setFormEmpleado({ nombre: "", apellido: "", fecha_ingreso: "", dni: "", email: "", password: "" }); }}>Cancelar</button>}
           </form>
-          <table style={tableStyle}>
-            <thead>
+          <table className="w-full border-collapse mt-4">
+            <thead className="bg-gray-100">
               <tr>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Fecha ingreso</th>
-                <th>DNI</th>
-                <th>Email</th>
-                <th>Acciones</th>
+                <th className="p-2 font-semibold">Nombre</th>
+                <th className="p-2 font-semibold">Apellido</th>
+                <th className="p-2 font-semibold">Fecha ingreso</th>
+                <th className="p-2 font-semibold">DNI</th>
+                <th className="p-2 font-semibold">Email</th>
+                <th className="p-2 font-semibold">Acciones</th>
               </tr>
             </thead>
             <tbody>
               {loadingEmpleados ? (
-                <tr><td colSpan={6}>Cargando...</td></tr>
+                <tr><td colSpan={6} className="text-center py-4">Cargando...</td></tr>
               ) : empleados.length === 0 ? (
-                <tr><td colSpan={6}>Sin empleados</td></tr>
+                <tr><td colSpan={6} className="text-center py-4">Sin empleados</td></tr>
               ) : empleados.map(empleado => (
-                <tr key={empleado.id}>
-                  <td>{empleado.nombre}</td>
-                  <td>{empleado.apellido}</td>
-                  <td>{empleado.fecha_ingreso}</td>
-                  <td>{empleado.dni}</td>
-                  <td>{empleado.email}</td>
-                  <td>
-                    <button style={actionBtnStyle} onClick={() => handleEditEmpleado(empleado)}>Editar</button>
-                    <button style={deleteBtnStyle} onClick={() => handleDeleteEmpleado(empleado.id)}>Eliminar</button>
+                <tr key={empleado.id} className="hover:bg-gray-50">
+                  <td className="p-2">{empleado.nombre}</td>
+                  <td className="p-2">{empleado.apellido}</td>
+                  <td className="p-2">{empleado.fecha_ingreso}</td>
+                  <td className="p-2">{empleado.dni}</td>
+                  <td className="p-2">{empleado.email}</td>
+                  <td className="p-2">
+                    <button className="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold text-sm border-none cursor-pointer mr-2 hover:bg-blue-700 transition" onClick={() => handleEditEmpleado(empleado)}>Editar</button>
+                    <button className="bg-red-500 text-white px-4 py-2 rounded-lg font-bold text-sm border-none cursor-pointer hover:bg-red-600 transition" onClick={() => handleDeleteEmpleado(empleado.id)}>Eliminar</button>
                   </td>
                 </tr>
               ))}
@@ -327,87 +342,3 @@ export default function DashboardAdmin() {
       </div>
     </div>
   );
-}
-
-
-const inputStyle = {
-  width: "100%",
-  padding: "0.75rem",
-  borderRadius: "0.75rem",
-  border: "1px solid #cbd5e1",
-  marginBottom: "0.75rem",
-  fontSize: "1rem"
-};
-const btnStyle = {
-  background: "#7c3aed",
-  color: "#fff",
-  padding: "0.75rem 1.5rem",
-  borderRadius: "0.75rem",
-  fontWeight: "bold",
-  fontSize: "1rem",
-  border: "none",
-  cursor: "pointer",
-  marginRight: "0.5rem"
-};
-const cancelBtnStyle = {
-  background: "#e5e7eb",
-  color: "#374151",
-  padding: "0.75rem 1.5rem",
-  borderRadius: "0.75rem",
-  fontWeight: "bold",
-  fontSize: "1rem",
-  border: "none",
-  cursor: "pointer"
-};
-const actionBtnStyle = {
-  background: "#2563eb",
-  color: "#fff",
-  padding: "0.5rem 1rem",
-  borderRadius: "0.5rem",
-  fontWeight: "bold",
-  fontSize: "0.95rem",
-  border: "none",
-  cursor: "pointer",
-  marginRight: "0.5rem"
-};
-const deleteBtnStyle = {
-  background: "#ef4444",
-  color: "#fff",
-  padding: "0.5rem 1rem",
-  borderRadius: "0.5rem",
-  fontWeight: "bold",
-  fontSize: "0.95rem",
-  border: "none",
-  cursor: "pointer"
-};
-const tableStyle = {
-  width: "100%",
-  borderCollapse: "collapse",
-  marginTop: "1rem"
-};
-const errorStyle = {
-  background: "#fee2e2",
-  color: "#b91c1c",
-  padding: "0.75rem",
-  borderRadius: "0.75rem",
-  marginBottom: "1rem",
-  textAlign: "center",
-  fontWeight: "bold"
-};
-
-const sectionStyle = {
-  background: "#fff",
-  borderRadius: "1rem",
-  boxShadow: "0 2px 8px #0001",
-  padding: "1.5rem",
-  flex: "1 1 400px",
-  minWidth: "400px",
-  marginBottom: "2rem"
-};
-
-const sectionTitle = {
-  fontSize: "1.25rem",
-  fontWeight: "bold",
-  color: "#7c3aed",
-  marginBottom: "1rem"
-};

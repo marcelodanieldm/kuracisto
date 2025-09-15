@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import EmpleadoCalendar from "./EmpleadoCalendar";
 import Header from "./Header";
 import LogoutButton from "./LogoutButton";
 
@@ -11,10 +12,18 @@ export default function DashboardEmpleado() {
     }
   }, []);
 
+  // Usar los turnos reales expuestos por Rails
+  const [turnos, setTurnos] = useState([]);
+  useEffect(() => {
+    if (window.__turnos) {
+      setTurnos(window.__turnos);
+    }
+  }, []);
+
   return (
     <div style={{ maxWidth: "1200px", margin: "2rem auto", padding: "2rem", background: "#f3f4f6", borderRadius: "2rem", boxShadow: "0 4px 24px #0001" }}>
       <Header email={user.email} role={user.role} onLogout={() => window.location.href = "/users/sign_out"} />
-      {/* Aquí irían los componentes de pacientes, turnos, email, etc. */}
+      <EmpleadoCalendar turnos={turnos} />
       <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap" }}>
         <section style={sectionStyle}>
           <h2 style={sectionTitle}>Administrar pacientes</h2>
